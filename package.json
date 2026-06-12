@@ -1,0 +1,14 @@
+{
+  "name": "ap-skills",
+  "version": "0.1.0",
+  "description": "Portable Agent Skills installer for Codex and Claude.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "install": "node scripts/install.mjs",
+    "validate": "node scripts/install.mjs --validate-only"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
