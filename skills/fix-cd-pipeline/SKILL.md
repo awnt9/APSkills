@@ -7,6 +7,12 @@ description: Diagnose and fix Continuous Deployment pipeline failures using the 
 
 Use this skill when the user asks to fix, debug, inspect, or improve a Continuous Deployment pipeline, deployment workflow, release job, GitHub Actions workflow, environment promotion, container publish, infrastructure deploy, or post-merge deployment failure.
 
+## Language
+
+Always respond to the user in Spanish in the chat, even if logs, code, workflow files, command output, or error messages are in English.
+
+Keep technical identifiers, command names, file paths, workflow names, job names, step names, environment names, branch names, secret names, and code snippets exactly as they appear.
+
 ## Core objective
 
 Find the root cause of failed deployments and propose the smallest safe fix.
