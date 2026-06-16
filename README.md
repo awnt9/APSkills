@@ -6,20 +6,6 @@ Reusable Agent Skills for Codex and Claude Code.
 
 - Node.js >= 18
 
-## Structure
-
-```txt
-AP-Skills/
-├─ skills/
-│  └─ your-skill/
-│     └─ SKILL.md
-├─ scripts/
-│  └─ install.mjs
-├─ AGENTS.md
-├─ package.json
-└─ README.md
-```
-
 ## Install skills
 
 Use one command:
@@ -40,32 +26,6 @@ Defaults:
 ```txt
 --agent all
 --scope user
-```
-
-## Examples
-
-Install all skills globally:
-
-```bash
-npm run install -- --agent all --scope user
-```
-
-Install only for Codex:
-
-```bash
-npm run install -- --agent codex --scope user
-```
-
-Install only for Claude Code:
-
-```bash
-npm run install -- --agent claude --scope user
-```
-
-Install inside the current repo:
-
-```bash
-npm run install -- --agent all --scope repo
 ```
 
 ## Validate skills

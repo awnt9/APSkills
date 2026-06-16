@@ -93,6 +93,21 @@ function getSkillNames() {
     .sort();
 }
 
+function validateSkillFrontmatter(skillName, content, errors) {
+  const lines = content.replace(/^\uFEFF/, "").split(/\r?\n/);
+  const hasRequiredFrontmatter =
+    lines[0] === "---" &&
+    /^name:\s*\S/.test(lines[1] ?? "") &&
+    /^description:\s*\S/.test(lines[2] ?? "") &&
+    lines[3] === "---";
+
+  if (!hasRequiredFrontmatter) {
+    errors.push(
+      `${skillName}: SKILL.md must start with frontmatter: ---, name:, description:, ---`
+    );
+  }
+}
+
 function validateSkills() {
   const skillNames = getSkillNames();
 
@@ -112,11 +127,15 @@ function validateSkills() {
       continue;
     }
 
-    const content = fs.readFileSync(skillFile, "utf8").trim();
+    const rawContent = fs.readFileSync(skillFile, "utf8");
+    const content = rawContent.trim();
 
     if (!content) {
       errors.push(`${skillName}: SKILL.md is empty`);
+      continue;
     }
+
+    validateSkillFrontmatter(skillName, rawContent, errors);
   }
 
   if (errors.length > 0) {
