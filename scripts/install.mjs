@@ -157,8 +157,13 @@ function getSkillVersionNames(skillName) {
     .sort(compareVersions);
 }
 
-function validateSkillFrontmatter(skillLabel, content, errors) {
+function normalizeYamlValue(value) {
+  return value?.trim().replace(/^["']|["']$/g, "");
+}
+
+function validateSkillFrontmatter(skillLabel, expectedSkillName, content, errors) {
   const lines = content.replace(/^\uFEFF/, "").split(/\r?\n/);
+  const name = normalizeYamlValue(lines[1]?.match(/^name:\s*(.+)$/)?.[1]);
   const hasRequiredFrontmatter =
     lines[0] === "---" &&
     /^name:\s*\S/.test(lines[1] ?? "") &&
@@ -169,6 +174,10 @@ function validateSkillFrontmatter(skillLabel, content, errors) {
     errors.push(
       `${skillLabel}: SKILL.md must start with frontmatter: ---, name:, description:, ---`
     );
+  }
+
+  if (name && name !== expectedSkillName) {
+    errors.push(`${skillLabel}: SKILL.md name "${name}" must match skill folder "${expectedSkillName}"`);
   }
 }
 
@@ -250,7 +259,7 @@ function validateSkills() {
         continue;
       }
 
-      validateSkillFrontmatter(skillLabel, rawContent, errors);
+      validateSkillFrontmatter(skillLabel, skillName, rawContent, errors);
     }
 
     skills.push({
