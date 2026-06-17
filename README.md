@@ -44,12 +44,16 @@ Validation checks that:
 - Every skill folder contains at least one version folder.
 - Every version folder contains a `SKILL.md`.
 - No `SKILL.md` is empty.
+- Every `SKILL.md` contains a header with the skill name and description.
 
 ## Install behavior
 
 The installer always overwrites existing installed skills.
 
 This means that after changing a skill or running `git pull`, you can run the install command again and the installed skills will be updated.
+
+> [!NOTE]
+> Installed skills apply after reloading the window or restarting the agent.
 
 ## Skill locations
 
