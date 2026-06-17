@@ -11,7 +11,7 @@ Reusable Agent Skills for Codex and Claude Code.
 Use one command:
 
 ```bash
-npm run install -- --agent all --scope user
+npm run install
 ```
 
 ## Options
@@ -19,6 +19,7 @@ npm run install -- --agent all --scope user
 ```txt
 --agent codex|claude|all
 --scope user|repo
+--version <version>|latest
 ```
 
 Defaults:
@@ -26,6 +27,7 @@ Defaults:
 ```txt
 --agent all
 --scope user
+--version latest
 ```
 
 ## Validate skills
@@ -37,7 +39,8 @@ npm run validate
 Validation checks that:
 
 - `skills/` exists.
-- Every skill folder contains a `SKILL.md`.
+- Every skill folder contains at least one version folder.
+- Every version folder contains a `SKILL.md`.
 - No `SKILL.md` is empty.
 
 ## Install behavior
@@ -73,7 +76,7 @@ Claude Code:
 Create:
 
 ```txt
-skills/my-new-skill/SKILL.md
+skills/my-new-skill/v1/SKILL.md
 ```
 
 Then run:
@@ -81,4 +84,17 @@ Then run:
 ```bash
 npm run validate
 npm run install -- --agent all --scope user
+```
+
+## Skill structure
+
+```txt
+skills/
+└─ example-skill/
+   ├─ README.md
+   └─ v1/
+      ├─ SKILL.md
+      ├─ scripts/
+      ├─ references/
+      └─ assets/
 ```

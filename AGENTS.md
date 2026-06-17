@@ -7,7 +7,7 @@ This repository contains reusable Agent Skills.
 Skills live in:
 
 ```txt
-skills/<skill-name>/SKILL.md
+skills/<skill-name>/<version>/SKILL.md
 ```
 
 ## Supported agents
@@ -30,6 +30,7 @@ Options:
 ```txt
 --agent codex|claude|all
 --scope user|repo
+--version <version>|latest
 ```
 
 Defaults:
@@ -37,6 +38,7 @@ Defaults:
 ```txt
 --agent all
 --scope user
+--version latest
 ```
 
 ## Examples
@@ -59,6 +61,12 @@ Install only Claude skills inside this repo:
 npm run install -- --agent claude --scope repo
 ```
 
+Install a specific skill version:
+
+```bash
+npm run install -- --agent all --scope user --version v1
+```
+
 Validate skills:
 
 ```bash
@@ -78,7 +86,7 @@ Each skill must be a directory inside `skills/`.
 Each skill must include:
 
 ```txt
-SKILL.md
+<version>/SKILL.md
 ```
 
 Recommended structure:
@@ -86,10 +94,12 @@ Recommended structure:
 ```txt
 skills/
 └─ example-skill/
-   ├─ SKILL.md
-   ├─ scripts/
-   ├─ references/
-   └─ assets/
+   ├─ README.md
+   └─ v1/
+      ├─ SKILL.md
+      ├─ scripts/
+      ├─ references/
+      └─ assets/
 ```
 
 ## Before finishing changes
@@ -102,7 +112,8 @@ npm run validate
 
 Check that:
 
-- Every skill has a `SKILL.md`.
+- Every skill has a versioned `SKILL.md`.
+- Every skill has at least one version folder such as `v1`.
 - No `SKILL.md` is empty.
 - Skill names are stable and lowercase.
 - No generated or local-only files are committed.
