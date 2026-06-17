@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 const skillsDir = path.join(repoRoot, "skills");
+const DEFAULT_VERSION = "latest";
 
 const AGENTS = {
   codex: {
@@ -26,6 +27,7 @@ function parseArgs(argv) {
   const args = {
     agent: "all",
     scope: "user",
+    version: DEFAULT_VERSION,
     validateOnly: false,
     help: false
   };
@@ -33,8 +35,9 @@ function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
 
-    if (arg === "--agent") args.agent = argv[++i];
-    else if (arg === "--scope") args.scope = argv[++i];
+    if (arg === "--agent") args.agent = readOptionValue(argv, ++i, arg);
+    else if (arg === "--scope") args.scope = readOptionValue(argv, ++i, arg);
+    else if (arg === "--version") args.version = readOptionValue(argv, ++i, arg);
     else if (arg === "--validate-only") args.validateOnly = true;
     else if (arg === "--help" || arg === "-h") args.help = true;
     else fail(`Unknown argument: ${arg}`);
@@ -43,16 +46,27 @@ function parseArgs(argv) {
   return args;
 }
 
+function readOptionValue(argv, index, optionName) {
+  const value = argv[index];
+
+  if (!value || value.startsWith("--")) {
+    fail(`Missing value for ${optionName}`);
+  }
+
+  return value;
+}
+
 function printHelp() {
   console.log(`
 Agent Skills installer
 
 Usage:
-  npm run install -- --agent all --scope user
+  npm run install -- --agent all --scope user --version latest
 
 Options:
   --agent codex|claude|all      Agent target. Default: all
   --scope user|repo             Install globally or inside this repo. Default: user
+  --version <version>|latest     Skill version to install. Default: latest
   --validate-only               Only validate skills structure
   --help                        Show help
 
@@ -60,6 +74,7 @@ Examples:
   npm run install -- --agent all --scope user
   npm run install -- --agent codex --scope user
   npm run install -- --agent claude --scope repo
+  npm run install -- --agent all --scope user --version v1
 `);
 }
 
@@ -79,6 +94,14 @@ function validateOptions(args) {
   if (!validScopes.includes(args.scope)) {
     fail(`Invalid --scope "${args.scope}". Use: ${validScopes.join(", ")}`);
   }
+
+  if (!args.version) {
+    fail(`Invalid --version "${args.version}". Use a version like v1 or ${DEFAULT_VERSION}`);
+  }
+
+  if (args.version !== DEFAULT_VERSION && !isVersionName(args.version)) {
+    fail(`Invalid --version "${args.version}". Use a version like v1 or ${DEFAULT_VERSION}`);
+  }
 }
 
 function getSkillNames() {
@@ -93,7 +116,40 @@ function getSkillNames() {
     .sort();
 }
 
-function validateSkillFrontmatter(skillName, content, errors) {
+function isSkillName(name) {
+  return /^[a-z0-9-]+$/.test(name);
+}
+
+function isVersionName(name) {
+  return /^v\d+(?:\.\d+)*$/.test(name);
+}
+
+function compareVersions(a, b) {
+  const aParts = a.slice(1).split(".").map(Number);
+  const bParts = b.slice(1).split(".").map(Number);
+  const maxLength = Math.max(aParts.length, bParts.length);
+
+  for (let i = 0; i < maxLength; i++) {
+    const aPart = aParts[i] ?? 0;
+    const bPart = bParts[i] ?? 0;
+
+    if (aPart !== bPart) return aPart - bPart;
+  }
+
+  return a.localeCompare(b);
+}
+
+function getSkillVersionNames(skillName) {
+  const skillPath = path.join(skillsDir, skillName);
+
+  return fs
+    .readdirSync(skillPath, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && isVersionName(entry.name))
+    .map((entry) => entry.name)
+    .sort(compareVersions);
+}
+
+function validateSkillFrontmatter(skillLabel, content, errors) {
   const lines = content.replace(/^\uFEFF/, "").split(/\r?\n/);
   const hasRequiredFrontmatter =
     lines[0] === "---" &&
@@ -103,7 +159,7 @@ function validateSkillFrontmatter(skillName, content, errors) {
 
   if (!hasRequiredFrontmatter) {
     errors.push(
-      `${skillName}: SKILL.md must start with frontmatter: ---, name:, description:, ---`
+      `${skillLabel}: SKILL.md must start with frontmatter: ---, name:, description:, ---`
     );
   }
 }
@@ -117,25 +173,44 @@ function validateSkills() {
   }
 
   const errors = [];
+  const skills = [];
 
   for (const skillName of skillNames) {
-    const skillPath = path.join(skillsDir, skillName);
-    const skillFile = path.join(skillPath, "SKILL.md");
+    if (!isSkillName(skillName)) {
+      errors.push(`${skillName}: skill names must use lowercase letters, numbers, and hyphens`);
+    }
 
-    if (!fs.existsSync(skillFile)) {
-      errors.push(`${skillName}: missing SKILL.md`);
+    const versionNames = getSkillVersionNames(skillName);
+
+    if (versionNames.length === 0) {
+      errors.push(`${skillName}: missing version directory, for example v1/SKILL.md`);
       continue;
     }
 
-    const rawContent = fs.readFileSync(skillFile, "utf8");
-    const content = rawContent.trim();
+    for (const versionName of versionNames) {
+      const skillLabel = `${skillName}@${versionName}`;
+      const skillFile = path.join(skillsDir, skillName, versionName, "SKILL.md");
 
-    if (!content) {
-      errors.push(`${skillName}: SKILL.md is empty`);
-      continue;
+      if (!fs.existsSync(skillFile)) {
+        errors.push(`${skillLabel}: missing SKILL.md`);
+        continue;
+      }
+
+      const rawContent = fs.readFileSync(skillFile, "utf8");
+      const content = rawContent.trim();
+
+      if (!content) {
+        errors.push(`${skillLabel}: SKILL.md is empty`);
+        continue;
+      }
+
+      validateSkillFrontmatter(skillLabel, rawContent, errors);
     }
 
-    validateSkillFrontmatter(skillName, rawContent, errors);
+    skills.push({
+      skillName,
+      versions: versionNames
+    });
   }
 
   if (errors.length > 0) {
@@ -144,8 +219,33 @@ function validateSkills() {
     process.exit(1);
   }
 
-  console.log(`Validated ${skillNames.length} skill(s): ${skillNames.join(", ")}`);
-  return skillNames;
+  const summary = skills
+    .map((skill) => `${skill.skillName} (${skill.versions.join(", ")})`)
+    .join("; ");
+
+  console.log(`Validated ${skills.length} skill(s): ${summary}`);
+  return skills;
+}
+
+function resolveSkillVersions(skills, requestedVersion) {
+  return skills.map((skill) => {
+    const versionName =
+      requestedVersion === DEFAULT_VERSION
+        ? skill.versions[skill.versions.length - 1]
+        : requestedVersion;
+
+    if (!skill.versions.includes(versionName)) {
+      fail(
+        `${skill.skillName}: version "${versionName}" not found. Available versions: ${skill.versions.join(", ")}`
+      );
+    }
+
+    return {
+      skillName: skill.skillName,
+      versionName,
+      source: path.join(skillsDir, skill.skillName, versionName)
+    };
+  });
 }
 
 function getTargets(agent, scope) {
@@ -184,14 +284,13 @@ function copyDirectory(source, destination) {
   });
 }
 
-function installSkill({ skillName, targetDir }) {
-  const source = path.join(skillsDir, skillName);
+function installSkill({ skillName, versionName, source, targetDir }) {
   const destination = path.join(targetDir, skillName);
 
   fs.mkdirSync(targetDir, { recursive: true });
   copyDirectory(source, destination);
 
-  console.log(`Installed ${skillName} -> ${destination}`);
+  console.log(`Installed ${skillName}@${versionName} -> ${destination}`);
 }
 
 function main() {
@@ -204,14 +303,15 @@ function main() {
 
   validateOptions(args);
 
-  const skillNames = validateSkills();
+  const skills = validateSkills();
+  const selectedSkills = resolveSkillVersions(skills, args.version);
 
   if (args.validateOnly) {
     return;
   }
 
-  if (skillNames.length === 0) {
-    console.log("Nothing to install. Add skills under ./skills/<skill-name>/SKILL.md first.");
+  if (skills.length === 0) {
+    console.log("Nothing to install. Add skills under ./skills/<skill-name>/<version>/SKILL.md first.");
     return;
   }
 
@@ -221,9 +321,11 @@ function main() {
     console.log(`\nTarget: ${target.agentName}`);
     console.log(`Directory: ${target.targetDir}`);
 
-    for (const skillName of skillNames) {
+    for (const skill of selectedSkills) {
       installSkill({
-        skillName,
+        skillName: skill.skillName,
+        versionName: skill.versionName,
+        source: skill.source,
         targetDir: target.targetDir
       });
     }
