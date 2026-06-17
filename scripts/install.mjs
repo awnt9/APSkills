@@ -11,6 +11,14 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 const skillsDir = path.join(repoRoot, "skills");
 const DEFAULT_VERSION = "latest";
+const REQUIRED_README_SECTIONS = [
+  "Autor",
+  "Resumen",
+  "Cuándo usarla",
+  "Cuándo no usarla",
+  "Requisitos previos",
+  "Cómo usar"
+];
 
 const AGENTS = {
   codex: {
@@ -164,6 +172,42 @@ function validateSkillFrontmatter(skillLabel, content, errors) {
   }
 }
 
+function getMarkdownHeadings(content) {
+  return new Set(
+    content
+      .replace(/^\uFEFF/, "")
+      .split(/\r?\n/)
+      .map((line) => line.match(/^#{1,6}\s+(.+?)\s*#*\s*$/)?.[1]?.trim())
+      .filter(Boolean)
+  );
+}
+
+function validateSkillReadme(skillName, errors) {
+  const readmeFile = path.join(skillsDir, skillName, "README.md");
+
+  if (!fs.existsSync(readmeFile)) {
+    errors.push(`${skillName}: missing README.md`);
+    return;
+  }
+
+  const rawContent = fs.readFileSync(readmeFile, "utf8");
+  const content = rawContent.trim();
+
+  if (!content) {
+    errors.push(`${skillName}: README.md is empty`);
+    return;
+  }
+
+  const headings = getMarkdownHeadings(rawContent);
+  const missingSections = REQUIRED_README_SECTIONS.filter((section) => !headings.has(section));
+
+  if (missingSections.length > 0) {
+    errors.push(
+      `${skillName}: README.md missing required section(s): ${missingSections.join(", ")}`
+    );
+  }
+}
+
 function validateSkills() {
   const skillNames = getSkillNames();
 
@@ -179,6 +223,8 @@ function validateSkills() {
     if (!isSkillName(skillName)) {
       errors.push(`${skillName}: skill names must use lowercase letters, numbers, and hyphens`);
     }
+
+    validateSkillReadme(skillName, errors);
 
     const versionNames = getSkillVersionNames(skillName);
 
