@@ -112,6 +112,8 @@ npm run validate
 
 Check that:
 
+- Every skill has a `README.md`.
+- Every skill `README.md` contains: `Autor`, `Resumen`, `Cuándo usarla`, `Cuándo no usarla`, `Requisitos previos`, `Cómo usar`.
 - Every skill has a versioned `SKILL.md`.
 - Every skill has at least one version folder such as `v1`.
 - No `SKILL.md` is empty.

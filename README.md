@@ -39,6 +39,8 @@ npm run validate
 Validation checks that:
 
 - `skills/` exists.
+- Every skill folder contains a `README.md`.
+- Every skill `README.md` contains the required sections: `Autor`, `Resumen`, `Cuándo usarla`, `Cuándo no usarla`, `Requisitos previos`, `Cómo usar`.
 - Every skill folder contains at least one version folder.
 - Every version folder contains a `SKILL.md`.
 - No `SKILL.md` is empty.
