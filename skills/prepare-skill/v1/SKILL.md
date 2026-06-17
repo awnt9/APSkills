@@ -1,15 +1,21 @@
 ---
 name: prepare-skill
-description: Normaliza borradores de Agent Skills dentro del repositorio AP-Skills para que pasen validacion. Use when a contributor has added a skill as a .txt/.md file, put SKILL.md in the wrong place, omitted README.md, omitted version folders, or missed required SKILL.md frontmatter.
+description: Normalize Agent Skill drafts inside the AP-Skills repository so they pass validation.
 ---
 
 # prepare-skill
 
-Ayuda a convertir una skill en cualquier estado intermedio en una skill valida para este repositorio.
+Helps convert a skill in any intermediate state into a valid skill for this repository.
 
-## Objetivo
+## Language
 
-Encajar borradores de skills dentro de la estructura esperada:
+Always respond to the user in Spanish in the chat, even if skill content, command output, validation errors, file paths, or code snippets are in English.
+
+Keep technical identifiers, command names, file paths, version folder names, skill names, and code snippets exactly as they appear.
+
+## Objective
+
+Fit skill drafts into the expected structure:
 
 ```txt
 skills/<skill-name>/
@@ -18,23 +24,23 @@ skills/<skill-name>/
     └── SKILL.md
 ```
 
-La prioridad es hacer que la skill pase `npm run validate` sin reescribir el contenido funcional que aporto el usuario.
+The priority is to make the skill pass `npm run validate` without rewriting the functional content provided by the user.
 
-## Reglas de preservacion
+## Preservation Rules
 
-- No cambies el cuerpo de la skill creada por el usuario.
-- Solo puedes modificar el contenido de la skill para anadir o corregir la cabecera YAML de `SKILL.md`.
-- Si el archivo ya tiene cuerpo util, conservalo en el mismo orden y con el mismo texto.
-- Si el archivo tiene una cabecera incompleta o incorrecta, reemplaza solo esa cabecera por una valida y deja el cuerpo intacto.
-- No cambies instrucciones internas, ejemplos, comandos, listas, nombres de herramientas ni redaccion del cuerpo de la skill.
-- No hagas staging, commits ni pushes salvo que el usuario lo pida explicitamente.
-- No borres archivos que no hayas identificado claramente como el borrador movido a la estructura final.
+- Do not change the body of the skill created by the user.
+- You may only modify the skill content to add or correct the YAML frontmatter in `SKILL.md`.
+- If the file already has useful body content, preserve it in the same order and with the same text.
+- If the file has incomplete or incorrect frontmatter, replace only that frontmatter with valid frontmatter and leave the body intact.
+- Do not change internal instructions, examples, commands, lists, tool names, or wording in the skill body.
+- Do not stage, commit, or push unless the user explicitly asks.
+- Do not delete files unless you have clearly identified them as the draft moved into the final structure.
 
-## Flujo
+## Flow
 
-### 1. Inspeccionar el estado
+### 1. Inspect the state
 
-Empieza con comandos de solo lectura:
+Start with read-only commands:
 
 ```bash
 git status --short
@@ -44,84 +50,84 @@ git ls-files --others --exclude-standard
 find skills -maxdepth 3 -type f | sort
 ```
 
-Lee los archivos candidatos con `sed` o una herramienta equivalente.
+Read candidate files with `sed` or an equivalent tool.
 
-### 2. Detectar candidatos de skill
+### 2. Detect skill candidates
 
-Considera como candidatos:
+Consider these candidates:
 
-- Archivos `.txt` o `.md` nuevos que contengan instrucciones de una skill.
-- Archivos llamados `SKILL.md` fuera de `skills/<skill-name>/<version>/`.
-- Carpetas dentro de `skills/` sin `README.md`.
-- Carpetas dentro de `skills/` sin una carpeta de version como `v1`.
-- Carpetas con `skills/<skill-name>/SKILL.md` en la raiz.
-- Skills cuyo `SKILL.md` no tenga cabecera YAML valida.
-- Skills cuyo `README.md` falte o no tenga las secciones obligatorias.
+- New `.txt` or `.md` files that contain skill instructions.
+- Files named `SKILL.md` outside `skills/<skill-name>/<version>/`.
+- Folders inside `skills/` without a `README.md`.
+- Folders inside `skills/` without a version folder such as `v1`.
+- Folders with `skills/<skill-name>/SKILL.md` at the root.
+- Skills whose `SKILL.md` does not have valid YAML frontmatter.
+- Skills whose `README.md` is missing or lacks required sections.
 
-Si hay varios candidatos independientes y no esta claro si pertenecen a la misma skill, pregunta antes de mezclarlos.
+If there are several independent candidates and it is unclear whether they belong to the same skill, ask before mixing them.
 
-### 3. Elegir nombre y destino
+### 3. Choose name and destination
 
-Elige el nombre de la skill en este orden:
+Choose the skill name in this order:
 
-1. El nombre de la carpeta si el archivo ya esta dentro de `skills/<skill-name>/`.
-2. El campo `name:` si existe una cabecera YAML clara.
-3. El nombre del archivo, normalizado a minusculas con guiones.
-4. Una propuesta breve basada en el contenido, solo si las opciones anteriores no existen.
+1. The folder name if the file is already inside `skills/<skill-name>/`.
+2. The `name:` field if clear YAML frontmatter exists.
+3. The file name, normalized to lowercase with hyphens.
+4. A short proposal based on the content, only if the previous options do not exist.
 
-El nombre debe usar solo letras minusculas, numeros y guiones.
+The name must use only lowercase letters, numbers, and hyphens.
 
-Usa este destino por defecto para skills nuevas:
+Use this default destination for new skills:
 
 ```txt
 skills/<skill-name>/v1/SKILL.md
 ```
 
-Si el usuario ya creo una carpeta de version valida, conserva esa version.
+If the user already created a valid version folder, keep that version.
 
-### 4. Mover o crear la estructura
+### 4. Move or create the structure
 
-Antes de editar, explica brevemente que vas a mover o crear.
+Before editing, briefly explain what you are going to move or create.
 
-Haz los cambios necesarios:
+Make the necessary changes:
 
-- Crea `skills/<skill-name>/` si no existe.
-- Crea `skills/<skill-name>/v1/` si no hay version valida.
-- Si el borrador esta en `.txt`, conviertelo a `SKILL.md` al moverlo al destino.
-- Si el borrador esta como `.md` con otro nombre, muevelo o copia su contenido a `SKILL.md` segun el contexto.
-- Si existe `skills/<skill-name>/SKILL.md`, muevelo a `skills/<skill-name>/v1/SKILL.md`.
-- No sobrescribas un `SKILL.md` existente con contenido distinto sin pedir confirmacion.
+- Create `skills/<skill-name>/` if it does not exist.
+- Create `skills/<skill-name>/v1/` if there is no valid version.
+- If the draft is a `.txt` file, convert it to `SKILL.md` when moving it to the destination.
+- If the draft is a `.md` file with another name, move it or copy its content to `SKILL.md` depending on context.
+- If `skills/<skill-name>/SKILL.md` exists, move it to `skills/<skill-name>/v1/SKILL.md`.
+- Do not overwrite an existing `SKILL.md` with different content without asking for confirmation.
 
-### 5. Arreglar cabecera de SKILL.md
+### 5. Fix `SKILL.md` frontmatter
 
-El archivo final debe empezar exactamente con:
+The final file must start exactly with:
 
 ```md
 ---
 name: <skill-name>
-description: <descripcion de una linea>
+description: <one-line description>
 ---
 ```
 
-Para generar la `description`, resume lo que la skill hace y cuando debe usarse basandote solo en el contenido visible del archivo.
+To generate the `description`, summarize what the skill does and when it should be used based only on the visible content of the file.
 
-Reglas:
+Rules:
 
-- Mantener `name:` igual al nombre de carpeta elegido.
-- Mantener `description:` en una sola linea.
-- No anadir campos extra a la cabecera.
-- Si falta cabecera, insertarla encima del cuerpo existente.
-- Si la cabecera existe pero es invalida, corregirla y conservar el cuerpo.
+- Keep `name:` equal to the chosen folder name.
+- Keep `description:` on a single line.
+- Do not add extra fields to the frontmatter.
+- If frontmatter is missing, insert it above the existing body.
+- If frontmatter exists but is invalid, correct it and preserve the body.
 
-### 6. Crear o completar README.md
+### 6. Create or complete `README.md`
 
-Cada skill debe tener:
+Every skill must have:
 
 ```txt
 skills/<skill-name>/README.md
 ```
 
-El README debe incluir estos encabezados:
+The README must include these headings:
 
 ```md
 ## Autor
@@ -132,42 +138,42 @@ El README debe incluir estos encabezados:
 ## Cómo usar
 ```
 
-Si falta el README, crealo con texto breve inferido de la skill.
+If the README is missing, create it with brief text inferred from the skill.
 
-Si existe, conserva su contenido y anade las secciones que falten. Si una seccion obligatoria esta vacia, rellena una linea breve.
+If it exists, preserve its content and add any missing sections. If a required section is empty, fill it with one brief line.
 
-Usa `Pendiente de definir.` para `Autor` cuando no haya un autor claro.
+Use `Pendiente de definir.` for `Autor` when there is no clear author.
 
-### 7. Validar y corregir
+### 7. Validate and correct
 
-Ejecuta:
+Run:
 
 ```bash
 npm run validate
 ```
 
-Si falla, corrige solo lo necesario para pasar la validacion:
+If it fails, correct only what is necessary to pass validation:
 
-- Nombres de carpeta.
-- Ubicacion `skills/<skill-name>/<version>/SKILL.md`.
-- Cabecera YAML.
-- README faltante o secciones requeridas.
+- Folder names.
+- Location `skills/<skill-name>/<version>/SKILL.md`.
+- YAML frontmatter.
+- Missing README or required README sections.
 
-Vuelve a ejecutar `npm run validate` hasta que pase o hasta encontrar un bloqueo real.
+Run `npm run validate` again until it passes or until you find a real blocker.
 
-## Salida esperada
+## Expected Output
 
-Al terminar, informa:
+When finished, report:
 
-- Ruta final de `SKILL.md`.
-- Ruta final de `README.md`.
-- Si se movio o renombro algun archivo original.
-- Resultado de `npm run validate`.
-- Cualquier decision inferida, como nombre o descripcion.
+- Final `SKILL.md` path.
+- Final `README.md` path.
+- Whether any original file was moved or renamed.
+- Result of `npm run validate`.
+- Any inferred decision, such as name or description.
 
-## Casos especiales
+## Special Cases
 
-- Si el borrador contiene varias skills en un unico archivo, pregunta antes de separarlas.
-- Si el contenido no parece una skill, avisa y pide confirmacion antes de moverlo.
-- Si hay una colision con una skill existente, pide confirmacion antes de sobrescribir.
-- Si el usuario pide crear una version nueva, usa la version indicada en vez de `v1`.
+- If the draft contains several skills in a single file, ask before splitting them.
+- If the content does not look like a skill, warn the user and ask for confirmation before moving it.
+- If there is a collision with an existing skill, ask for confirmation before overwriting.
+- If the user asks to create a new version, use the indicated version instead of `v1`.

@@ -1,94 +1,119 @@
 ---
 name: commits
-description: Analiza el diff de git y propone cómo agrupar los cambios en commits separados usando únicamente `git add` por archivos completos. No debe ejecutar comandos.
+description: Analyze the git diff and propose how to group changes into separate commits using only whole-file git add commands. Must not execute commands.
 ---
 
-Actúa como asistente experto en Git y revisión de diffs.
+# commits
 
-Objetivo:
-- Revisar los cambios actuales del repositorio.
-- Proponer una separación lógica en commits pequeños y coherentes.
-- Agrupar los cambios únicamente por archivos completos.
-- Dar nombres de commit claros.
-- Dar los comandos exactos para que el usuario los ejecute manualmente.
-- No ejecutar ningún comando que modifique Git.
-- No crear commits.
-- No hacer staging.
-- No modificar archivos.
-- No proponer `git add -p`.
-- No proponer staging por hunks, líneas o fragmentos parciales.
+Act as an expert assistant for Git and diff review.
 
-Flujo:
-1. Inspecciona el estado del repositorio con comandos de solo lectura, por ejemplo:
-   - `git status --short`
-   - `git diff`
-   - `git diff --staged`
-   - `git ls-files --others --exclude-standard`
+## Language
 
-2. Analiza los cambios por intención:
-   - bugfix
-   - refactor
-   - feature
-   - tests
-   - docs
-   - config
-   - estilos/formato
-   - chore
+Always respond to the user in Spanish in the chat, even if logs, code, diffs, command output, commit messages, or error messages are in English.
 
-3. Agrupa los archivos completos en commits independientes.
-   - Cada archivo debe aparecer completo en un único commit propuesto.
-   - No dividas un mismo archivo entre varios commits.
-   - No propongas hunks ni partes concretas de un archivo.
-   - Si un archivo mezcla varias intenciones, inclúyelo en el commit más representativo y avisa brevemente de que contiene cambios mixtos.
+Keep technical identifiers, command names, file paths, branch names, commit hashes, and code snippets exactly as they appear.
 
-4. Para cada commit, devuelve:
-   - propósito
-   - archivos completos incluidos
-   - mensaje de commit recomendado
-   - comandos para ejecutarlo manualmente
+## Objective
 
-5. Usa Conventional Commits cuando encaje:
-   - `feat: ...`
-   - `fix: ...`
-   - `refactor: ...`
-   - `test: ...`
-   - `docs: ...`
-   - `chore: ...`
-   - `style: ...`
+- Review the current repository changes.
+- Propose a logical split into small, coherent commits.
+- Group changes only by whole files.
+- Provide clear commit messages.
+- Provide the exact commands for the user to run manually.
+- Do not execute any command that modifies Git.
+- Do not create commits.
+- Do not stage files.
+- Do not modify files.
+- Do not propose `git add -p`.
+- Do not propose staging by hunks, lines, or partial fragments.
 
-Formato de respuesta:
+## Flow
 
-## Propuesta de commits
+### 1. Inspect the repository state
 
-### Commit 1: <mensaje>
-Motivo: <explicación breve>
+Use read-only commands, for example:
 
-Incluye:
-- `<archivo>`
-- `<archivo>`
+```bash
+git status --short
+git diff
+git diff --staged
+git ls-files --others --exclude-standard
+```
 
-Comandos:
+### 2. Analyze changes by intent
+
+Classify each change as one of:
+
+- bugfix
+- refactor
+- feature
+- tests
+- docs
+- config
+- style/formatting
+- chore
+
+### 3. Group whole files into independent commits
+
+- Each file must appear in exactly one proposed commit.
+- Do not split a single file across multiple commits.
+- Do not propose hunks or specific parts of a file.
+- If a file mixes several intents, include it in the most representative commit and briefly mention that it contains mixed changes.
+
+### 4. For each commit, return
+
+- Purpose.
+- Complete files included.
+- Recommended commit message.
+- Commands for the user to run manually.
+
+### 5. Use Conventional Commits when they fit
+
+- `feat: ...`
+- `fix: ...`
+- `refactor: ...`
+- `test: ...`
+- `docs: ...`
+- `chore: ...`
+- `style: ...`
+
+## Response Format
+
+Respond using this structure:
+
+```text
+## Commit Proposal
+
+### Commit 1: <message>
+Reason: <brief explanation>
+
+Includes:
+- `<file>`
+- `<file>`
+
+Commands:
 
 ~~~bash
-git add <archivo> <archivo>
-git commit -m "<mensaje>"
+git add <file> <file>
+git commit -m "<message>"
 ~~~
 
-### Commit 2: <mensaje>
-Motivo: <explicación breve>
+### Commit 2: <message>
+Reason: <brief explanation>
 
-Incluye:
-- `<archivo>`
+Includes:
+- `<file>`
 
-Comandos:
+Commands:
 
 ~~~bash
-git add <archivo>
-git commit -m "<mensaje>"
+git add <file>
+git commit -m "<message>"
 ~~~
 
-## Notas
+## Notes
 
-- Los commits están agrupados por archivos completos.
-- No se ha propuesto `git add -p`.
-- Si algún archivo contiene cambios de varias intenciones, se ha asignado al commit más coherente posible sin partirlo.
+- Commits are grouped by whole files.
+- `git add -p` was not proposed.
+- If any file contains changes with several intents, it was assigned to the most coherent commit possible without splitting it.
+```

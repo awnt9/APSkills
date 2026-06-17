@@ -5,6 +5,12 @@ description: makes a preventive deployment best-practices review for repositorie
 
 # docker-compose-github-actions-deployment-review
 
+## Language
+
+Always respond to the user in Spanish in the chat, even if logs, code, workflow files, command output, or error messages are in English.
+
+Keep technical identifiers, command names, file paths, workflow names, job names, step names, environment names, branch names, secret names, and code snippets exactly as they appear.
+
 ## Purpose
 
 Use this skill to perform a preventive deployment best-practices review for repositories that deploy applications using Docker, Docker Compose, and GitHub Actions.

@@ -7,6 +7,12 @@ description: Diagnose failed GitHub Pull Requests by inspecting checks, CI logs,
 
 Diagnose a failed GitHub Pull Request, reason about the cause, and only make safe minor fixes after explicit approval.
 
+## Language
+
+Always respond to the user in Spanish in the chat, even if logs, code, workflow files, command output, or error messages are in English.
+
+Keep technical identifiers, command names, file paths, workflow names, job names, step names, environment names, branch names, secret names, and code snippets exactly as they appear.
+
 ## Purpose
 
 Use this skill when the user has a Pull Request that failed checks, tests, linting, typechecking, or CI.
@@ -222,18 +228,18 @@ For major fixes:
 When a code change may be needed, respond with:
 
 ```text
-He encontrado una posible solución menor y segura.
+I found a possible minor and safe fix.
 
-Causa:
+Cause:
 ...
 
-Cambio propuesto:
+Proposed change:
 ...
 
-Archivos que tocaría:
+Files I would touch:
 ...
 
-¿Quieres que lo aplique?
+Do you want me to apply it?
 ```
 
 Do not edit until the user clearly approves.
@@ -241,14 +247,14 @@ Do not edit until the user clearly approves.
 When a command may create persistent changes, respond with:
 
 ```text
-Este comando puede modificar el repo o el estado remoto:
+This command may modify the repository or remote state:
 
 <command>
 
-Motivo:
+Reason:
 ...
 
-¿Quieres que lo ejecute?
+Do you want me to run it?
 ```
 
 Do not run it until the user clearly approves.
@@ -273,43 +279,43 @@ Do not run it until the user clearly approves.
 After diagnosis, report:
 
 ```text
-Diagnóstico:
+Diagnosis:
 ...
 
-Causa probable:
+Likely cause:
 ...
 
-Tipo de fix:
+Fix type:
 - Minor safe fix / Major logic-affecting fix / Unclear
 
-Qué haría:
+What I would do:
 ...
 
-Archivos implicados:
+Files involved:
 ...
 
-Comandos revisados:
+Commands reviewed:
 ...
 
-Estado:
+Status:
 ...
 ```
 
 If code was changed after approval, also include:
 
 ```text
-Cambios aplicados:
+Changes applied:
 ...
 
-Checks ejecutados:
+Checks run:
 ...
 
-Resultado:
+Result:
 ...
 ```
 
 If no code was changed, clearly say:
 
 ```text
-No he tocado código.
+I did not touch code.
 ```
