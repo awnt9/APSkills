@@ -16,4 +16,4 @@ Cuando necesites una aplicacion completa, assets externos, Tailwind, canvas o an
 Un entorno tipo CodePen con React, ReactDOM y Babel habilitados para JSX.
 
 ## Cómo usar
-Describe el objeto visual, la interaccion opcional y las restricciones; la skill devuelve los paneles HTML, CSS y JSX.
+Escribe <code>&#47;react-flat-component</code> en el chat y describe el objeto visual, la interaccion opcional y las restricciones.

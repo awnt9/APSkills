@@ -17,4 +17,4 @@ Cuando quieras cambios automáticos sin aprobación previa del usuario.
 - acceso a github cli y permisos para leer la PR.
 
 ## Cómo usar
-``` /fix-pr ```
+Escribe <code>&#47;fix-pr</code> en el chat.

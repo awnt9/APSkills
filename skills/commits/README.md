@@ -16,4 +16,4 @@ Cuando necesites que el agente haga staging, cree commits o edite archivos.
 Un repositorio Git con cambios locales o staged para analizar.
 
 ## Cómo usar
-``` /commits ```
+Escribe <code>&#47;commits</code> en el chat.

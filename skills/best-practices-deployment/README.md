@@ -17,4 +17,4 @@ Cuando solo necesites corregir un fallo puntual de logs sin revisión preventiva
 - Acceso a GitHub CLI y permisos para leer el repositorio y sus workflows.
 
 ## Cómo usar
-``` /best-practices-deployment ```
+Escribe <code>&#47;best-practices-deployment</code> en el chat.

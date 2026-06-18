@@ -17,4 +17,4 @@ Cuando busques una auditoría preventiva completa en vez de arreglar una inciden
 - acceson a github cli y permisos para leer el workflow, run o job de CD.
 
 ## Cómo usar
-``` /fix-cd-pipeline ```
+Escribe <code>&#47;fix-cd-pipeline</code> en el chat.

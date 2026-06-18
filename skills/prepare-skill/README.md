@@ -16,4 +16,4 @@ Cuando quieras reescribir el contenido funcional de la skill en vez de conservar
 Un repositorio AP-Skills con cambios locales que incluyan una skill nueva o incompleta.
 
 ## Cómo usar
-`prepare-skill`
+Escribe <code>&#47;prepare-skill</code> en el chat.

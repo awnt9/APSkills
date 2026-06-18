@@ -16,4 +16,4 @@ Cuando no necesites medir ni resumir el gasto asociado a una interaccion con LLM
 Un agente de programacion ejecutando una skill o prompt que deba auditarse.
 
 ## Cómo usar
-Invoca `prompt-crafting` al revisar una skill o prompt para generar el bloque de metricas.
+Escribe <code>&#47;prompt-crafting</code> en el chat después de una skill o prompt para revisarlo.
