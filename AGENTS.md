@@ -31,6 +31,7 @@ Options:
 --agent codex|claude|all
 --scope user|repo
 --version <version>|latest
+--skill|--skills <skill-name>[,<skill-name>]
 ```
 
 Defaults:
@@ -39,6 +40,7 @@ Defaults:
 --agent all
 --scope user
 --version latest
+skills: all
 ```
 
 ## Examples
@@ -65,6 +67,18 @@ Install a specific skill version:
 
 ```bash
 npm run install -- --agent all --scope user --version v1
+```
+
+Install a specific skill:
+
+```bash
+npm run install -- --skill prepare-skill
+```
+
+Install multiple specific skills:
+
+```bash
+npm run install -- --skills prepare-skill,fix-pr
 ```
 
 Validate skills:

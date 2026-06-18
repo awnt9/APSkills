@@ -20,6 +20,7 @@ npm run install
 --agent codex|claude|all
 --scope user|repo
 --version <version>|latest
+--skill|--skills <skill-name>[,<skill-name>]
 ```
 
 Defaults:
@@ -28,6 +29,19 @@ Defaults:
 --agent all
 --scope user
 --version latest
+skills: all
+```
+
+Install a specific skill:
+
+```bash
+npm run install -- --skill prepare-skill
+```
+
+Install multiple specific skills:
+
+```bash
+npm run install -- --skills prepare-skill,fix-pr
 ```
 
 ## Validate skills

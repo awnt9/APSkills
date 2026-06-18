@@ -36,6 +36,7 @@ function parseArgs(argv) {
     agent: "all",
     scope: "user",
     version: DEFAULT_VERSION,
+    skillNames: [],
     validateOnly: false,
     help: false
   };
@@ -46,11 +47,15 @@ function parseArgs(argv) {
     if (arg === "--agent") args.agent = readOptionValue(argv, ++i, arg);
     else if (arg === "--scope") args.scope = readOptionValue(argv, ++i, arg);
     else if (arg === "--version") args.version = readOptionValue(argv, ++i, arg);
+    else if (arg === "--skill" || arg === "--skills") {
+      args.skillNames.push(...parseSkillNameList(readOptionValue(argv, ++i, arg), arg));
+    }
     else if (arg === "--validate-only") args.validateOnly = true;
     else if (arg === "--help" || arg === "-h") args.help = true;
     else fail(`Unknown argument: ${arg}`);
   }
 
+  args.skillNames = [...new Set(args.skillNames)];
   return args;
 }
 
@@ -64,17 +69,31 @@ function readOptionValue(argv, index, optionName) {
   return value;
 }
 
+function parseSkillNameList(value, optionName) {
+  const skillNames = value
+    .split(",")
+    .map((skillName) => skillName.trim())
+    .filter(Boolean);
+
+  if (skillNames.length === 0) {
+    fail(`Missing value for ${optionName}`);
+  }
+
+  return skillNames;
+}
+
 function printHelp() {
   console.log(`
 Agent Skills installer
 
 Usage:
-  npm run install -- --agent all --scope user --version latest
+  npm run install -- --agent all --scope user --version latest --skill prepare-skill
 
 Options:
   --agent codex|claude|all      Agent target. Default: all
   --scope user|repo             Install globally or inside this repo. Default: user
   --version <version>|latest     Skill version to install. Default: latest
+  --skill <name>[,<name>]        Skill folder name to install. Can be repeated. Default: all
   --validate-only               Only validate skills structure
   --help                        Show help
 
@@ -83,6 +102,8 @@ Examples:
   npm run install -- --agent codex --scope user
   npm run install -- --agent claude --scope repo
   npm run install -- --agent all --scope user --version v1
+  npm run install -- --skill prepare-skill
+  npm run install -- --skills prepare-skill,fix-pr
 `);
 }
 
@@ -110,18 +131,41 @@ function validateOptions(args) {
   if (args.version !== DEFAULT_VERSION && !isVersionName(args.version)) {
     fail(`Invalid --version "${args.version}". Use a version like v1 or ${DEFAULT_VERSION}`);
   }
+
+  for (const skillName of args.skillNames) {
+    if (!isSkillName(skillName)) {
+      fail(`Invalid --skill "${skillName}". Skill names must use lowercase letters, numbers, and hyphens`);
+    }
+  }
 }
 
-function getSkillNames() {
+function getSkillNames(requestedSkillNames = []) {
   if (!fs.existsSync(skillsDir)) {
     fail(`Missing skills directory: ${skillsDir}`);
   }
 
-  return fs
+  const availableSkillNames = fs
     .readdirSync(skillsDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
+
+  if (requestedSkillNames.length === 0) {
+    return availableSkillNames;
+  }
+
+  const availableSkillNameSet = new Set(availableSkillNames);
+  const missingSkillNames = requestedSkillNames.filter(
+    (skillName) => !availableSkillNameSet.has(skillName)
+  );
+
+  if (missingSkillNames.length > 0) {
+    fail(
+      `Skill(s) not found: ${missingSkillNames.join(", ")}. Available skills: ${availableSkillNames.join(", ")}`
+    );
+  }
+
+  return requestedSkillNames;
 }
 
 function isSkillName(name) {
@@ -217,8 +261,8 @@ function validateSkillReadme(skillName, errors) {
   }
 }
 
-function validateSkills() {
-  const skillNames = getSkillNames();
+function validateSkills(requestedSkillNames = []) {
+  const skillNames = getSkillNames(requestedSkillNames);
 
   if (skillNames.length === 0) {
     console.log("No skills found in ./skills yet.");
@@ -278,7 +322,8 @@ function validateSkills() {
     .map((skill) => `${skill.skillName} (${skill.versions.join(", ")})`)
     .join("; ");
 
-  console.log(`Validated ${skills.length} skill(s): ${summary}`);
+  const filterMessage = requestedSkillNames.length > 0 ? " selected" : "";
+  console.log(`Validated ${skills.length}${filterMessage} skill(s): ${summary}`);
   return skills;
 }
 
@@ -358,7 +403,7 @@ function main() {
 
   validateOptions(args);
 
-  const skills = validateSkills();
+  const skills = validateSkills(args.skillNames);
   const selectedSkills = resolveSkillVersions(skills, args.version);
 
   if (args.validateOnly) {
