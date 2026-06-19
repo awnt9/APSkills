@@ -93,6 +93,8 @@ The installer always overwrites existing installed skills.
 
 This is intentional so that running the install command after a `git pull` updates the installed skills.
 
+If a skill includes `references/` inside the selected version folder, those files are installed with that skill version. Shared root-level `references/` folders are not installed; keep each version self-contained.
+
 ## Skill rules
 
 Each skill must be a directory inside `skills/`.
@@ -111,9 +113,7 @@ skills/
    ├─ README.md
    └─ v1/
       ├─ SKILL.md
-      ├─ scripts/
-      ├─ references/
-      └─ assets/
+      └─ references/
 ```
 
 ## Before finishing changes

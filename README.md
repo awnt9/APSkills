@@ -66,6 +66,8 @@ The installer always overwrites existing installed skills.
 
 This means that after changing a skill or running `git pull`, you can run the install command again and the installed skills will be updated.
 
+If a skill includes `references/` inside the selected version folder, those files are installed with that skill version. Shared root-level `references/` folders are not installed; keep each version self-contained.
+
 > [!NOTE]
 > Installed skills apply after reloading the window or restarting the agent.
 
@@ -114,7 +116,5 @@ skills/
    ├─ README.md
    └─ v1/
       ├─ SKILL.md
-      ├─ scripts/
-      ├─ references/
-      └─ assets/
+      └─ references/
 ```
