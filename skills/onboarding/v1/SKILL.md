@@ -235,11 +235,12 @@ The output should help the developer decide where to start.
 
 ## Required Output Format
 
-Produce the onboarding report using exactly the following sections.
+Produce the onboarding report using exactly the following sections and titles in Spanish.
+Do not translate these headings into English or replace them with English equivalents.
 
 ---
 
-# 1. Project Name
+# 1. Nombre del proyecto
 
 State the project name.
 
@@ -256,7 +257,7 @@ Include, when useful:
 
 ---
 
-# 2. Conceptual Description
+# 2. Descripción conceptual
 
 Explain what the project is in plain English.
 
@@ -282,13 +283,13 @@ If the business/domain purpose is unclear, say so.
 
 ---
 
-# 3. Frameworks and Languages Used
+# 3. Marcos de trabajo y lenguajes utilizados
 
 List the main languages and frameworks.
 
 Separate them into:
 
-## Languages
+## Lenguajes
 
 Example:
 
@@ -296,7 +297,7 @@ Example:
 - Python
 - SQL
 
-## Frameworks
+## Marcos de trabajo
 
 Example:
 
@@ -307,7 +308,7 @@ Example:
 - Express
 - Prefect
 
-## Runtime / Platform
+## Entorno de ejecución / plataforma
 
 Example:
 
@@ -321,7 +322,7 @@ Mention how you detected them, using file evidence when possible.
 
 ---
 
-# 4. Tools and Libraries Used, and What They Are For
+# 4. Herramientas y bibliotecas utilizadas y para qué sirven
 
 List the important tools and libraries.
 
@@ -329,34 +330,34 @@ Group them by purpose.
 
 Example:
 
-## Application Core
+## Núcleo de la aplicación
 
 - `next`: frontend/full-stack framework.
 - `react`: UI rendering.
 - `fastapi`: HTTP API framework.
 
-## Data / Persistence
+## Datos / persistencia
 
 - `prisma`: database schema and ORM.
 - `sqlalchemy`: database access layer.
 - `postgres`: likely relational database.
 
-## Validation
+## Validación
 
 - `zod`: runtime validation for TypeScript.
 - `pydantic`: request and domain validation for Python.
 
-## Authentication
+## Autenticación
 
 - `next-auth`: authentication and session management.
 
-## Testing
+## Pruebas
 
 - `pytest`: Python test runner.
 - `vitest`: TypeScript test runner.
 - `playwright`: browser/end-to-end testing.
 
-## CI/CD and Automation
+## CI/CD y automatización
 
 - `github actions`: automated checks/deployment workflows.
 - `docker`: containerized runtime.
@@ -365,7 +366,7 @@ Do not list every library. Prioritize libraries that matter for understanding th
 
 ---
 
-# 5. Architecture Diagram
+# 5. Diagrama de arquitectura
 
 Provide a high-level architecture diagram.
 
@@ -389,22 +390,22 @@ If the architecture is unclear, provide the best inferred diagram and mark it as
 
 ---
 
-# 6. Function and Purpose of Each File and Folder
+# 6. Función y propósito de cada archivo y carpeta
 
 Explain the repository structure.
 
 Use this format:
 
-## Top-Level Structure
+## Estructura de nivel superior
 
-| Path | Purpose |
+| Ruta | Propósito |
 |---|---|
 | `src/` | Main application source code. |
 | `tests/` | Automated tests. |
 | `package.json` | Node.js package metadata and scripts. |
 | `README.md` | Project documentation and setup instructions. |
 
-## Important Folders
+## Carpetas importantes
 
 For each important folder:
 
@@ -417,7 +418,7 @@ Explain:
 - how it fits into the architecture
 - what kind of changes usually happen here
 
-## Important Files
+## Archivos importantes
 
 For each important file:
 
@@ -430,11 +431,11 @@ Explain:
 - why it matters
 - what other parts of the system likely depend on it
 
-## Full File Inventory
+## Inventario completo de archivos
 
 When useful, include a compact file inventory:
 
-| File | Role |
+| Archivo | Función |
 |---|---|
 | `src/app/page.tsx` | Main page route. |
 | `src/lib/auth.ts` | Authentication configuration. |
@@ -444,13 +445,13 @@ Avoid generic descriptions. Be specific.
 
 ---
 
-# 7. How to Contribute to This Repository
+# 7. Cómo contribuir a este repositorio
 
 Describe how developers appear to contribute based on repository evidence.
 
 Include:
 
-## Observed Workflow
+## Flujo de trabajo observado
 
 Mention visible evidence such as:
 
@@ -464,7 +465,7 @@ Mention visible evidence such as:
 - commit conventions
 - release process
 
-## Expected Local Checks
+## Comprobaciones locales esperadas
 
 List commands found in the repo.
 
@@ -484,7 +485,7 @@ ruff check .
 mypy .
 ```
 
-## Contribution Style Inferred from the Codebase
+## Estilo de contribución inferido de la base de código
 
 Explain:
 
@@ -502,21 +503,21 @@ If the repo does not define contribution rules, say:
 
 ---
 
-# 8. Recommended Prior Knowledge
+# 8. Conocimientos previos recomendados
 
 List what a developer should know before working on this repository.
 
 Group it like this:
 
-## Required
+## Requeridos
 
 Knowledge needed to safely make common changes.
 
-## Recommended
+## Recomendados
 
 Knowledge that helps understand the repo better.
 
-## Area-Specific
+## Específicos por área
 
 Knowledge needed only for specific parts.
 
@@ -529,7 +530,7 @@ Example:
 
 ---
 
-# 9. Recommended Reading Path
+# 9. Ruta de lectura recomendada
 
 Give a suggested order for reading the repository.
 
@@ -550,7 +551,7 @@ For each item, explain why it should be read at that point.
 
 ---
 
-# 10. Main System Flows
+# 10. Flujos principales del sistema
 
 Describe the main flows through the system.
 
@@ -558,7 +559,7 @@ Use diagrams or step-by-step sequences.
 
 Examples:
 
-## Request Flow
+## Flujo de solicitudes
 
 ```text
 User action
@@ -570,7 +571,7 @@ User action
 → UI update
 ```
 
-## Authentication Flow
+## Flujo de autenticación
 
 ```text
 Login form
@@ -580,7 +581,7 @@ Login form
 → protected page/API access
 ```
 
-## Background Job Flow
+## Flujo de trabajos en segundo plano
 
 ```text
 API trigger
@@ -596,59 +597,59 @@ If flows cannot be confidently identified, explain what is visible and what is u
 
 ---
 
-# 11. Where to Make Common Changes
+# 11. Dónde realizar cambios habituales
 
 Provide practical guidance for common development tasks.
 
 Use this format:
 
-## If you want to add or change a page
+## Si quieres añadir o modificar una página
 
-Look at:
-
-- `...`
-
-Why:
+Revisa:
 
 - `...`
 
-## If you want to add or change an API endpoint
-
-Look at:
+Motivo:
 
 - `...`
 
-Why:
+## Si quieres añadir o modificar un endpoint de API
+
+Revisa:
 
 - `...`
 
-## If you want to change database models
-
-Look at:
+Motivo:
 
 - `...`
 
-Why:
+## Si quieres modificar los modelos de datos
+
+Revisa:
 
 - `...`
 
-## If you want to change authentication/authorization
-
-Look at:
+Motivo:
 
 - `...`
 
-Why:
+## Si quieres modificar la autenticación o autorización
+
+Revisa:
 
 - `...`
 
-## If you want to add tests
-
-Look at:
+Motivo:
 
 - `...`
 
-Why:
+## Si quieres añadir pruebas
+
+Revisa:
+
+- `...`
+
+Motivo:
 
 - `...`
 
@@ -658,7 +659,7 @@ Do not include categories that do not apply.
 
 ---
 
-# 12. Risks and Sensitive Areas
+# 12. Riesgos y áreas sensibles
 
 Identify risky or delicate parts of the repository.
 
@@ -693,23 +694,23 @@ Example:
 
 ---
 
-# 13. Assumptions and Uncertainty
+# 13. Suposiciones e incertidumbre
 
 Clearly state what is known, inferred, and unknown.
 
 Use this format:
 
-## Known from Files
+## Confirmado por los archivos
 
 - The project uses Next.js because `next` appears in `package.json`.
 - The project has GitHub Actions because `.github/workflows/ci.yml` exists.
 
-## Inferred
+## Inferido
 
 - The app likely uses PostgreSQL because Prisma is configured with a PostgreSQL provider.
 - The repository appears to be a full-stack app because it contains both UI routes and API routes.
 
-## Unknown / Not Visible
+## Desconocido / no visible
 
 - Deployment target is not visible.
 - Branching strategy is not documented.
