@@ -72,13 +72,13 @@ npm run install -- --agent all --scope user --version v1
 Install a specific skill:
 
 ```bash
-npm run install -- --skill prepare-skill
+npm run install -- --skill fix-pr
 ```
 
 Install multiple specific skills:
 
 ```bash
-npm run install -- --skills prepare-skill,fix-pr
+npm run install -- --skills fix-pr,commits
 ```
 
 Validate skills:
@@ -99,37 +99,58 @@ If a skill includes `references/` inside the selected version folder, those file
 
 Each skill must be a directory inside `skills/`.
 
-Each skill must include:
+Required structure:
 
 ```txt
-<version>/SKILL.md
+skills/<skill-name>/
+├── README.md
+└─ v1/
+   ├── SKILL.md
+   └─ references/   (optional)
 ```
 
-Recommended structure:
+### Naming
 
-```txt
-skills/
-└─ example-skill/
-   ├─ README.md
-   └─ v1/
-      ├─ SKILL.md
-      └─ references/
+- Skill folder names: lowercase letters, numbers, and hyphens only (`example-skill`, `fix-pr`).
+- Version folders: `v1`, `v2`, `v1.0`, etc.
+- Default location for new skills: `skills/<skill-name>/v1/SKILL.md`.
+
+### SKILL.md
+
+Each version folder must contain a non-empty `SKILL.md`.
+
+The file must start with this frontmatter and nothing else before the body:
+
+```md
+---
+name: <skill-name>
+description: <one-line description>
+---
 ```
+
+Frontmatter rules:
+
+- `name:` must match the skill folder name.
+- `description:` must be a single line summarizing what the skill does and when to use it.
+- Do not add extra frontmatter fields.
+
+### README.md
+
+Every skill must have `skills/<skill-name>/README.md` with these headings:
+
+```md
+## Autor
+## Resumen
+## Cuándo usarla
+## Cuándo no usarla
+## Requisitos previos
+## Cómo usar
+```
+
+If the author is unknown, use `Pendiente de definir.` under `## Autor`.
 
 ## Before finishing changes
 
-Run:
+Run `npm run validate` and fix any reported issues using the rules above.
 
-```bash
-npm run validate
-```
-
-Check that:
-
-- Every skill has a `README.md`.
-- Every skill `README.md` contains: `Autor`, `Resumen`, `Cuándo usarla`, `Cuándo no usarla`, `Requisitos previos`, `Cómo usar`.
-- Every skill has a versioned `SKILL.md`.
-- Every skill has at least one version folder such as `v1`.
-- No `SKILL.md` is empty.
-- Skill names are stable and lowercase.
-- No generated or local-only files are committed.
+Do not commit generated or local-only files.
