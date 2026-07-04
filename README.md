@@ -1,4 +1,4 @@
-# AP-Skills
+# APSkills
 
 Reusable Agent Skills for Codex and Claude Code.
 
