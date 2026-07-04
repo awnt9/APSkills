@@ -35,13 +35,13 @@ skills: all
 Install a specific skill:
 
 ```bash
-npm run install -- --skill prepare-skill
+npm run install -- --skill fix-pr
 ```
 
 Install multiple specific skills:
 
 ```bash
-npm run install -- --skills prepare-skill,fix-pr
+npm run install -- --skills fix-pr,commits
 ```
 
 ## Validate skills

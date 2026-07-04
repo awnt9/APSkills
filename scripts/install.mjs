@@ -87,7 +87,7 @@ function printHelp() {
 Agent Skills installer
 
 Usage:
-  npm run install -- --agent all --scope user --version latest --skill prepare-skill
+  npm run install -- --agent all --scope user --version latest --skill fix-pr
 
 Options:
   --agent codex|claude|all      Agent target. Default: all
@@ -102,8 +102,8 @@ Examples:
   npm run install -- --agent codex --scope user
   npm run install -- --agent claude --scope repo
   npm run install -- --agent all --scope user --version v1
-  npm run install -- --skill prepare-skill
-  npm run install -- --skills prepare-skill,fix-pr
+  npm run install -- --skill fix-pr
+  npm run install -- --skills fix-pr,commits
 `);
 }
 
