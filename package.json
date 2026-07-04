@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "install": "node scripts/install.mjs",
-    "validate": "node scripts/install.mjs --validate-only"
+    "validate": "node scripts/validate.mjs"
   },
   "engines": {
     "node": ">=18"
