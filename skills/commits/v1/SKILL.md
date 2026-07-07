@@ -1,6 +1,6 @@
 ---
 name: commits
-description: Analyze the git diff and propose how to group changes into separate commits using only whole-file git add commands. Must not execute commands.
+description: Analyze the git diff and propose how to group changes into separate commits using only whole-file git add commands. Commit messages must always be short and in English. Must not execute commands.
 ---
 
 # commits
@@ -9,7 +9,11 @@ Act as an expert assistant for Git and diff review.
 
 ## Language
 
-Always respond to the user in Spanish in the chat, even if logs, code, diffs, command output, commit messages, or error messages are in English.
+Always respond to the user in Spanish in the chat, even if logs, code, diffs, command output, or error messages are in English.
+
+Commit messages must always be in English, including the Conventional Commits prefix and subject line.
+
+Never propose commit messages in Spanish, even if the user writes in Spanish or the analyzed changes are in Spanish.
 
 Keep technical identifiers, command names, file paths, branch names, commit hashes, and code snippets exactly as they appear.
 
@@ -18,7 +22,7 @@ Keep technical identifiers, command names, file paths, branch names, commit hash
 - Review the current repository changes.
 - Propose a logical split into small, coherent commits.
 - Group changes only by whole files.
-- Provide clear commit messages.
+- Provide clear, short commit messages in English.
 - Provide the exact commands for the user to run manually.
 - Do not execute any command that modifies Git.
 - Do not create commits.
@@ -26,6 +30,15 @@ Keep technical identifiers, command names, file paths, branch names, commit hash
 - Do not modify files.
 - Do not propose `git add -p`.
 - Do not propose staging by hunks, lines, or partial fragments.
+
+## Commit messages
+
+- Write one short line per commit, in English.
+- Use Conventional Commits when they fit: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`, `style:`.
+- Keep the subject concise (about 72 characters or less).
+- Do not add a body, bullet points, or extra paragraphs to the commit message.
+- Do not use heredocs, `cat <<'EOF'`, `EOF`, or any multi-line commit syntax.
+- Always propose commands in this exact form: `git commit -m "short english message"`.
 
 ## Flow
 
@@ -62,12 +75,14 @@ Classify each change as one of:
 
 ### 4. For each commit, return
 
-- Purpose.
+- Purpose in Spanish.
 - Complete files included.
-- Recommended commit message.
+- Recommended commit message in English.
 - Commands for the user to run manually.
 
 ### 5. Use Conventional Commits when they fit
+
+Write the subject in English:
 
 - `feat: ...`
 - `fix: ...`
@@ -84,8 +99,8 @@ Respond using this structure:
 ```text
 ## Commit Proposal
 
-### Commit 1: <message>
-Reason: <brief explanation>
+### Commit 1: <english message>
+Reason: <brief explanation in Spanish>
 
 Includes:
 - `<file>`
@@ -95,11 +110,11 @@ Commands:
 
 ~~~bash
 git add <file> <file>
-git commit -m "<message>"
+git commit -m "<english message>"
 ~~~
 
-### Commit 2: <message>
-Reason: <brief explanation>
+### Commit 2: <english message>
+Reason: <brief explanation in Spanish>
 
 Includes:
 - `<file>`
@@ -108,12 +123,14 @@ Commands:
 
 ~~~bash
 git add <file>
-git commit -m "<message>"
+git commit -m "<english message>"
 ~~~
 
 ## Notes
 
 - Commits are grouped by whole files.
 - `git add -p` was not proposed.
+- Commit messages are always short and in English.
+- Heredocs and multi-line commit messages were not proposed.
 - If any file contains changes with several intents, it was assigned to the most coherent commit possible without splitting it.
 ```
